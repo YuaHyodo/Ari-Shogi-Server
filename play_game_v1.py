@@ -58,6 +58,7 @@ class game:
             self.player2.send_message('REJECT:' + self.ID + ' by ' + r_name + k)
             return 'REJECT'
         #開始
+        self.for_csa_file_summary()
         self.main_loop()
         return
 
@@ -120,7 +121,17 @@ class game:
             self.player1.send_message(summary)
         else:
             self.player2.send_message(summary)
-        self.file_text += summary
+        return
+
+    def for_csa_file_summary(self):
+        text_list = ['V2.2', 'N+' + self.player1.name, 'N-' + self.player2.name, '$EVENT:Ari Shogi Server ' + self.ID,
+                         'P1-KY-KE-GI-KI-OU-KI-GI-KE-KY', 'P2 * -HI *  *  *  *  * -KA *', 'P3-FU-FU-FU-FU-FU-FU-FU-FU-FU',
+                         'P4 *  *  *  *  *  *  *  *  *', 'P5 *  *  *  *  *  *  *  *  *', 'P6 *  *  *  *  *  *  *  *  *',
+                         'P7+FU+FU+FU+FU+FU+FU+FU+FU+FU', 'P8 * +KA *  *  *  *  * +HI *', 'P9+KY+KE+GI+KI+OU+KI+GI+KE+KY',
+                         '+']
+        for text in text_list:
+            self.file_text += text
+            self.file_text += k
         return
 
     def main_loop(self):
@@ -202,6 +213,22 @@ class game:
             message = move + ',T' + str(t)
             self.player1.send_message(message)
             self.player2.send_message(message)
+            c_move = board.move_from_csa(move[1:])
+            if not board.is_legal(c_move):
+                if not board.is_ok():#Boardが壊れた
+                    raise ValueError('Board Error')
+                self.player1.send_message('#ILLEGAL_MOVE')
+                self.player2.send_message('#ILLEGAL_MOVE')
+                self.player1.send_message('#LOSE')
+                self.player2.send_message('#WIN')
+                self.file_text += ('%ILLEGAL_MOVE' + k)
+                result = ['lose', 'win']
+                break
+            if not board.is_ok():#Boardが壊れた
+                raise ValueError('Board Error')
+            board.push(c_move)
+            if not board.is_ok():#Boardが壊れた
+                raise ValueError('Board Error')
             self.file_text += (move + k)
             
             #後手番
@@ -264,6 +291,22 @@ class game:
             message = move + ',T' + str(t)
             self.player2.send_message(message)
             self.player1.send_message(message)
+            c_move = board.move_from_csa(move[1:])
+            if not board.is_legal(c_move):
+                if not board.is_ok():#Boardが壊れた
+                    raise ValueError('Board Error')
+                self.player2.send_message('#ILLEGAL_MOVE')
+                self.player1.send_message('#ILLEGAL_MOVE')
+                self.player2.send_message('#LOSE')
+                self.player1.send_message('#WIN')
+                self.file_text += ('%ILLEGAL_MOVE' + k)
+                result = ['win', 'lose']
+                break
+            if not board.is_ok():#Boardが壊れた
+                raise ValueError('Board Error')
+            board.push(c_move)
+            if not board.is_ok():#Boardが壊れた
+                raise ValueError('Board Error')
             self.file_text += (move + k)
         #棋譜を保存
         self.write()
