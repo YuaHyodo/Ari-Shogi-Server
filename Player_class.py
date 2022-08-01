@@ -17,7 +17,7 @@ class Player:
         elif result == 'draw':
             self.player_data['draws'] += 1
         else:
-            self.player_data['loses'] += 1
+            self.player_data['losses'] += 1
         return
 
     def load_player_data(self):
@@ -34,7 +34,7 @@ class Player:
         #無いなら初期値を設定する
         self.new_player = True 
         self.path = './Players/Player/' + self.name + '.json'
-        self.player_data = {'rate': 1500, 'games': 0, 'wins': 0, 'draws': 0, 'loses': 0}
+        self.player_data = {'rate': 1500, 'games': 0, 'wins': 0, 'draws': 0, 'losses': 0}
         return
 
     def write_player_data(self):
