@@ -1,18 +1,42 @@
-2022-08-01 19:05:22.123838 | init_server
+2022-08-02 21:06:51.331556 | init_server
 
-2022-08-01 19:05:22.123838 | start test1
+2022-08-02 21:06:51.331556 | start test1
 
-2022-08-01 19:05:22.123838 | login waiting
+2022-08-02 21:06:51.332531 | login waiting
 
-2022-08-01 19:05:27.965209 | user tester1659 login
+2022-08-02 21:07:09.934292 | user tansaibo_v2_Normal login
 
-2022-08-01 19:05:27.966207 | waiting cliants:1
+2022-08-02 21:07:09.936287 | waiting cliants:1
 
-2022-08-01 19:05:27.967204 | login waiting
+2022-08-02 21:07:09.936287 | login waiting
 
-2022-08-01 19:05:38.460124 | user tester1659 login
+2022-08-02 21:07:13.812540 | user tansaibo_v2_Plus login
 
-2022-08-01 19:05:38.461122 | waiting cliants:2
+2022-08-02 21:07:13.813534 | waiting cliants:2
 
-2022-08-01 19:05:38.461122 | login waiting
+2022-08-02 21:07:13.814531 | login waiting
+
+2022-08-02 21:07:34.698241 | user HC_komadoku login
+
+2022-08-02 21:07:34.699236 | waiting cliants:3
+
+2022-08-02 21:07:34.700257 | login waiting
+
+2022-08-02 21:07:57.215591 | user Asagao_v1 login
+
+2022-08-02 21:07:57.216588 | waiting cliants:4
+
+2022-08-02 21:07:57.217582 | start match make
+
+2022-08-02 21:07:57.217582 | make 2 matchs
+
+2022-08-02 21:07:57.218580 | start game game-HC_komadoku-VS-tansaibo_v2_Normal-16594420772175827
+
+2022-08-02 21:07:57.219577 | start game game-tansaibo_v2_Plus-VS-Asagao_v1-16594420772175827
+
+2022-08-02 21:18:03.310705 | finish game game-HC_komadoku-VS-tansaibo_v2_Normal-16594420772175827
+
+2022-08-02 21:23:14.977006 | finish game game-tansaibo_v2_Plus-VS-Asagao_v1-16594420772175827
+
+2022-08-02 21:23:14.977006 | finish test1
 
