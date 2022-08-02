@@ -6,6 +6,7 @@ import cshogi
 import shogi as pyshogi
 import time
 
+from rate_v1 import update_rate
 #改行を表す
 k = '\n'
 
@@ -179,6 +180,7 @@ class game:
                 self.player1.send_message('#LOSE')
                 self.player2.send_message('#WIN')
                 self.file_text += ('%TORYO' + k)
+                result = ['lose', 'win']
                 break
             #%CHUDANは反則行為とする
             if move == '%CHUDAN':
@@ -313,6 +315,11 @@ class game:
         #リザルトを反映
         self.player1.update_player_data(result[0])
         self.player2.update_player_data(result[1])
+        d = {'win': 1, 'draw': 0.5, 'lose': 0}
+        result = [d[result[0]], d[result[1]]]
+        rate1, rate2 = update_rate(result, self.player1.player_data['rate'], self.player2.player_data['rate'])
+        self.player1.player_data['rate'] = rate1
+        self.player2.player_data['rate'] = rate2
         self.player1.write_player_data()
         self.player2.write_player_data()
         return
