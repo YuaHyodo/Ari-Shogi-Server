@@ -1,3 +1,4 @@
+from output_v1 import HTML_update
 from play_game_v1 import game
 from Player_class import Player
 from  threading import Thread
@@ -15,6 +16,7 @@ class Server_v1:
     def __init__(self):
         #初期化
         self.log = logger()
+        self.output = HTML_update()
         self.log.clear_log()
         self.waiting_players = []
         self.playing_players = []
@@ -80,6 +82,7 @@ class Server_v1:
         for t in range(len(threads_list)):
             threads_list[t].join()
             self.log.write('finish game ' + self.games[t].ID)
+        self.output.update()
         return
 
     def test1(self):
