@@ -22,7 +22,7 @@ class HTML_update:
                         <html lang="ja">
                         <head>
                         <meta charset="UTF-8">
-                        <title lang="ja">Ari Shogi Server test1</title>
+                        <title lang="ja">Ari Shogi Server</title>
                         </head>
                         <body>
                         <article>
@@ -54,5 +54,5 @@ class HTML_update:
             f.write(text)
         return
 
-a = HTML_update()
-a.update()
+if __name__ == '__main__':
+    HTML_update().update()
