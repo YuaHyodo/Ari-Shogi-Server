@@ -6,6 +6,9 @@
 - ちゃんとしたサーバーのプログラムが欲しい人は別のところを当たる事。
 - USIプロトコルじゃなくてCSAプロトコルを使う理由: 私(兵頭)のAIはCSAプロトコルには対応しているけどUSIプロトコルには対応していないから
 - ファイル・クラス・関数・変数名、出力されるメッセージ、実装方法、設計思想などに関する意見は受け付けておりません。 (不満があるなら自分で作ってください)
+- オセロ版もある( https://github.com/YuaHyodo/Ari-Othello-Server )
+- CSAプロトコルに関してはここを参照のこと: http://www2.computer-shogi.org/protocol/tcp_ip_server_121.html
+- floodgateのリンクはここ: http://wdoor.c.u-tokyo.ac.jp/shogi/floodgate.html
 
 # すでにある機能・想定している使い方
 ## すでにある機能
