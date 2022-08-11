@@ -157,7 +157,7 @@ class game:
                 result = ['draw', 'draw']
                 break
             #先手の行動
-            move, t = self.player1.get_move()
+            move, t = self.player1.get_move(player1_time + self.time_setting['inc'])
             #時間などの管理
             player1_time -= t
             player1_time += self.time_setting['inc']
@@ -241,7 +241,7 @@ class game:
                 self.player2.send_message('#CENSORED')
                 result = ['draw', 'draw']
                 break
-            move, t = self.player2.get_move()
+            move, t = self.player2.get_move(player2_time + self.time_setting['inc'])
             player2_time -= t
             player2_time += self.time_setting['inc']
             c += 1

@@ -88,7 +88,7 @@ class Server_v1:
     def test1(self):
         #テスト
         self.log.write('start test1')
-        for i in range(4):
+        for i in range(2):
             self.login_cliant()
             self.log.write('waiting cliants:' + str(len(self.waiting_players)))
         self.match_make()

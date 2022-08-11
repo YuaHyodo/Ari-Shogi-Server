@@ -63,7 +63,7 @@ class Player:
         message = self.connect.recv(self.buf_size)
         return str(message)
 
-    def get_move(self):
+    def get_move(self, time_limit):
         #指し手を受け取る関数
         #また、消費時間を計測している
         start_time = time.time()
@@ -75,6 +75,8 @@ class Player:
                 return '%KACHI', int(time.time() - start_time)
             if 'CHUDAN' in move:#中断
                 return '%CHUDAN', int(time.time() - start_time)
+            if int(time.time() - start_time) >= (time_limit + 5):
+                return None, int(time.time() - start_time)
             if len(move) >= 7:#指して
                 break
         #とりあえず動けば良い
