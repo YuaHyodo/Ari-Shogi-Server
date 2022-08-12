@@ -1,5 +1,6 @@
 from output_v1 import HTML_update
 from play_game_v1 import game
+from security_v1 import Security
 from Player_class import Player
 from  threading import Thread
 from logger_v1 import logger
@@ -17,6 +18,7 @@ class Server_v1:
         #初期化
         self.log = logger()
         self.output = HTML_update()
+        self.security = Security()
         self.log.clear_log()
         self.waiting_players = []
         self.playing_players = []
@@ -46,11 +48,15 @@ class Server_v1:
         index += 8
         username = m[8:index]
         password = m[index:-3]
-        self.log.write('user ' + username + ' login')
-        cliant.send(str('LOGIN:' + username + ' OK' + k).encode('utf-8'))
-        #待機プレーヤのlistに追加
-        player = Player(cliant, username, password)
-        self.waiting_players.append(player)
+        if self.security.login_check(username, password):
+            self.log.write('user ' + username + ' login')
+            cliant.send(str('LOGIN:' + username + ' OK' + k).encode('utf-8'))
+            #待機プレーヤのlistに追加
+            player = Player(cliant, username, password)
+            self.waiting_players.append(player)
+        else:
+            self.log.write('login failed username: ' + username)
+            cliant.send(('LOGIN:incorrect' + k).encode('utf-8'))
         return
 
     def match_make(self):
@@ -88,7 +94,7 @@ class Server_v1:
     def test1(self):
         #テスト
         self.log.write('start test1')
-        for i in range(2):
+        while len(self.waiting_players) < 2:
             self.login_cliant()
             self.log.write('waiting cliants:' + str(len(self.waiting_players)))
         self.match_make()
