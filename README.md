@@ -40,6 +40,7 @@
 - rate_v1.py: レートの計算など 
 - logger_v1.py: ログを取る 
 - output_v1.py: HTMLファイルへの出力
+- security_v1.py: あってもなくてもあまり変わらない程度のセキュリティ関係のコード
 - /Players/Players.json: 全プレーヤーの管理 
 - /Players/Player/: 各プレーヤーのファイルを保存するディレクトリ
 - /games/: 棋譜を保存するディレクトリ 
