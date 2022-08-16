@@ -10,6 +10,10 @@
 - CSAプロトコルに関してはここを参照のこと: http://www2.computer-shogi.org/protocol/tcp_ip_server_121.html
 - floodgateのリンクはここ: http://wdoor.c.u-tokyo.ac.jp/shogi/floodgate.html
 
+# 注意
+- 実行には、snail_shogi( https://github.com/YuaHyodo/snail_shogi )が必要です。
+- インストール方法などはsnail_shogiのリポジトリをご確認ください。
+
 # すでにある機能・想定している使い方
 ## すでにある機能
 - CSAプロトコルを使って将棋の対局を行う機能
