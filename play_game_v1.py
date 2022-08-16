@@ -2,8 +2,7 @@
 メッセージをlistに格納して、それを順番に送るようにすると
 まだマシになりそうなので、あとでやる。
 """
-import cshogi
-import shogi as pyshogi
+import snail_shogi as shogi
 import time
 
 from rate_v1 import update_rate
@@ -138,8 +137,7 @@ class game:
     def main_loop(self):
         #メインループ(不完全)
         #合法手チェック用
-        board = cshogi.Board()
-        board2 = pyshogi.Board()
+        board = shogi.Board()
         #残りの持ち時間
         player1_time = self.time_setting['total']
         player2_time = self.time_setting['total']
@@ -215,10 +213,8 @@ class game:
             message = move + ',T' + str(t)
             self.player1.send_message(message)
             self.player2.send_message(message)
-            c_move = board.move_from_csa(move[1:])
-            if not board.is_legal(c_move):
-                if not board.is_ok():#Boardが壊れた
-                    raise ValueError('Board Error')
+            usi_move = board.csamove_to_usi(move[1:])
+            if usi_move not in board.gen_legal_moves():
                 self.player1.send_message('#ILLEGAL_MOVE')
                 self.player2.send_message('#ILLEGAL_MOVE')
                 self.player1.send_message('#LOSE')
@@ -226,11 +222,7 @@ class game:
                 self.file_text += ('%ILLEGAL_MOVE' + k)
                 result = ['lose', 'win']
                 break
-            if not board.is_ok():#Boardが壊れた
-                raise ValueError('Board Error')
-            board.push(c_move)
-            if not board.is_ok():#Boardが壊れた
-                raise ValueError('Board Error')
+            board.push_usi(usi_move)
             self.file_text += (move + k)
             
             #後手番
@@ -293,10 +285,8 @@ class game:
             message = move + ',T' + str(t)
             self.player2.send_message(message)
             self.player1.send_message(message)
-            c_move = board.move_from_csa(move[1:])
-            if not board.is_legal(c_move):
-                if not board.is_ok():#Boardが壊れた
-                    raise ValueError('Board Error')
+            usi_move = board.csamove_to_usi(move[1:])
+            if usi_move not in board.gen_legal_moves():
                 self.player2.send_message('#ILLEGAL_MOVE')
                 self.player1.send_message('#ILLEGAL_MOVE')
                 self.player2.send_message('#LOSE')
@@ -304,11 +294,7 @@ class game:
                 self.file_text += ('%ILLEGAL_MOVE' + k)
                 result = ['win', 'lose']
                 break
-            if not board.is_ok():#Boardが壊れた
-                raise ValueError('Board Error')
-            board.push(c_move)
-            if not board.is_ok():#Boardが壊れた
-                raise ValueError('Board Error')
+            board.push_usi(usi_move)
             self.file_text += (move + k)
         #棋譜を保存
         self.write()
