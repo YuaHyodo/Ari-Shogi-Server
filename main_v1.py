@@ -28,15 +28,10 @@ from datetime import datetime
 from Player_class import Player
 from  threading import Thread
 from logger_v1 import logger
+from setting import*
 import random
 import socket
 import time
-
-#各種設定
-HOST = '127.0.0.1'
-PORT = 4081
-buf_size = 1024
-k = '\n'
 
 class Server_v1:
     def __init__(self):
