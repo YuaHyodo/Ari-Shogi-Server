@@ -45,7 +45,7 @@ class Server_v1:
         self.games = []
         self.log.write('init_server')
 
-    def login_cliant(self):
+    def login_client(self):
         #ログイン待機
         self.log.write('login waiting')
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -53,36 +53,33 @@ class Server_v1:
         s.listen(1)
         while True:
             try:
-                cliant, addr = s.accept()
+                client, addr = s.accept()
                 break
             except:
                 pass
         while True:
-            m = str(cliant.recv(buf_size))
+            m = str(client.recv(buf_size))
             if 'LOGIN' in m:
                 break
-            else:
-                pass
-        #usernameをスマートじゃない方法で抽出
-        index = list(m)[8:].index(' ')
-        index += 8
-        username = m[8:index]
-        password = m[index:-3]
+        #usernameを抽出
+        message = ''.join(m.splitlines()).split()
+        username = message[1]
+        password = message[2]
         if self.security.login_check(username, password):
             self.log.write('user ' + username + ' login')
-            cliant.send(str('LOGIN:' + username + ' OK' + k).encode('utf-8'))
+            client.send(str('LOGIN:' + username + ' OK' + k).encode('utf-8'))
             #待機プレーヤのlistに追加
-            player = Player(cliant, username, password)
+            player = Player(client, username, password)
             self.waiting_players.append(player)
         else:
             self.log.write('login failed username: ' + username)
-            cliant.send(('LOGIN:incorrect' + k).encode('utf-8'))
+            client.send(('LOGIN:incorrect' + k).encode('utf-8'))
         return
 
     def match_make(self):
         try:
             self.log.write('start match make')
-            self.log.write('waiting cliants:' + str(len(self.waiting_players)))
+            self.log.write('waiting clients:' + str(len(self.waiting_players)))
             names = [player.name for player in self.waiting_players]
             self.log.write('waiting players list: ' + str(names))
             if len(self.waiting_players) < 2:
@@ -92,12 +89,12 @@ class Server_v1:
             #ランダムにマッチング
             random.shuffle(self.waiting_players)
             a = list(range(0, len(self.waiting_players), 2))
-            a.pop(-1)
+            if len(self.waiting_players) % 2 == 1:
+                a.pop(-1)
             for i in a:
                 player1 = self.waiting_players[i]
                 player2 = self.waiting_players[i + 1]
                 self.games.append(game(player1, player2)) 
-                #self.playing_players.extend([player1, player2])
             #待機listから外す
             del self.waiting_players[0:a[-1] + 2]
             self.log.write('make ' + str(len(self.games)) + ' matchs')
@@ -120,15 +117,15 @@ class Server_v1:
             self.waiting_players.clear()
         return
 
-    def login_cliant_loop(self):
+    def login_client_loop(self):
         while True:
-            self.login_cliant()
-            self.log.write('waiting cliants:' + str(len(self.waiting_players)))
+            self.login_client()
+            self.log.write('waiting clients:' + str(len(self.waiting_players)))
         return
 
     def main(self):
-        login_cliant_thread = Thread(target=self.login_cliant_loop)
-        login_cliant_thread.start()
+        login_client_thread = Thread(target=self.login_client_loop)
+        login_client_thread.start()
         while True:#無限に稼働
             if datetime.now().minute % 5 == 0:
                 match_thread = Thread(target=self.match_make)
@@ -140,8 +137,8 @@ class Server_v1:
         #テスト
         self.log.write('start test1')
         while len(self.waiting_players) < 2:
-            self.login_cliant()
-            self.log.write('waiting cliants:' + str(len(self.waiting_players)))
+            self.login_client()
+            self.log.write('waiting clients:' + str(len(self.waiting_players)))
         self.match_make()
         self.log.write('finish test1')
         return
