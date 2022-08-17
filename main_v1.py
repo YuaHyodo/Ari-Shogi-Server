@@ -21,15 +21,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-
 from output_v1 import HTML_update
 from play_game_v1 import game
 from security_v1 import Security
+from datetime import datetime
 from Player_class import Player
 from  threading import Thread
 from logger_v1 import logger
-import numpy as np
+import random
 import socket
+import time
 
 #各種設定
 HOST = '127.0.0.1'
@@ -84,35 +85,60 @@ class Server_v1:
         return
 
     def match_make(self):
-        self.log.write('start match make')
-        if len(self.waiting_players) < 2:
-            #プレーヤー数が不十分
-            print('cancel match make')
-            return
-        #ランダムにマッチング
-        np.random.shuffle(self.waiting_players)
-        a = list(range(0, len(self.waiting_players), 2))
-        for i in a:
-            player1 = self.waiting_players[i]
-            player2 = self.waiting_players[i + 1]
-            self.games.append(game(player1, player2)) 
-            self.playing_players.extend([player1, player2])
-        #待機listから外す
-        del self.waiting_players[0:a[-1]]
-        self.log.write('make ' + str(len(self.games)) + ' matchs')
-        #対局を開始する
-        threads_list = []
-        for g in self.games:
-            thread = Thread(target=g.start)
-            threads_list.append(thread)
-        for t in range(len(threads_list)):
-            threads_list[t].start()
-            self.log.write('start game ' + self.games[t].ID)
-        #すべての対局が終わるまで待機
-        for t in range(len(threads_list)):
-            threads_list[t].join()
-            self.log.write('finish game ' + self.games[t].ID)
-        self.output.update()
+        try:
+            self.log.write('start match make')
+            self.log.write('waiting cliants:' + str(len(self.waiting_players)))
+            names = [player.name for player in self.waiting_players]
+            self.log.write('waiting players list: ' + str(names))
+            if len(self.waiting_players) < 2:
+                #プレーヤー数が不十分
+                self.log.write('cancel match make')
+                return
+            #ランダムにマッチング
+            random.shuffle(self.waiting_players)
+            a = list(range(0, len(self.waiting_players), 2))
+            a.pop(-1)
+            for i in a:
+                player1 = self.waiting_players[i]
+                player2 = self.waiting_players[i + 1]
+                self.games.append(game(player1, player2)) 
+                #self.playing_players.extend([player1, player2])
+            #待機listから外す
+            del self.waiting_players[0:a[-1] + 2]
+            self.log.write('make ' + str(len(self.games)) + ' matchs')
+            #対局を開始する
+            threads_list = []
+            for g in self.games:
+                thread = Thread(target=g.start)
+                threads_list.append(thread)
+            for t in range(len(threads_list)):
+                threads_list[t].start()
+                self.log.write('start game ' + self.games[t].ID)
+            #すべての対局が終わるまで待機
+            for t in range(len(threads_list)):
+                threads_list[t].join()
+                self.log.write('finish game ' + self.games[t].ID)
+            self.games.clear()
+            self.output.update()
+        except:
+            self.log.write('match make error')
+            self.waiting_players.clear()
+        return
+
+    def login_cliant_loop(self):
+        while True:
+            self.login_cliant()
+            self.log.write('waiting cliants:' + str(len(self.waiting_players)))
+        return
+
+    def main(self):
+        login_cliant_thread = Thread(target=self.login_cliant_loop)
+        login_cliant_thread.start()
+        while True:#無限に稼働
+            if datetime.now().minute % 5 == 0:
+                match_thread = Thread(target=self.match_make)
+                match_thread.start()
+                time.sleep(60)
         return
 
     def test1(self):
@@ -127,4 +153,5 @@ class Server_v1:
 
 if __name__ == '__main__':
     server = Server_v1()
-    server.test1()
+    #server.test1()
+    server.main()
