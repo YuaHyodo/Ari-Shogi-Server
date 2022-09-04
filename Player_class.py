@@ -84,15 +84,15 @@ class Player:
 
     def recv_message(self):
         #メッセージを受け取る関数
-        message = self.connect.recv(self.buf_size)
-        return str(message)
+        message = self.connect.recv(self.buf_size).decode('utf-8')
+        return message
 
     def get_move(self, time_limit):
         #指し手を受け取る関数
         #また、消費時間を計測している
         start_time = time.time()
         while True:
-            move = self.recv_message()
+            move = ''.join(self.recv_message().splitlines())
             if 'TORYO' in move:#投了
                 return '%TORYO', int(time.time() - start_time)
             if 'KACHI' in move:#勝ち宣言
@@ -104,6 +104,6 @@ class Player:
             if len(move) >= 7:#指して
                 break
         #とりあえず動けば良い
-        return move[2:9], int(time.time() - start_time)
+        return move, int(time.time() - start_time)
 
     
