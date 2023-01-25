@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+from setting import*
 import json
 
 class Security:
@@ -50,6 +51,10 @@ class Security:
         password = ''.join(password.split(' '))
         if username not in self.white_list.keys():
             #リストに名前なし
+            if add_new_user:
+                #新しいユーザを自動で登録する設定がオンになっているので登録を行う
+                self.add_user(username, password)
+                return True
             return False
         if password != self.white_list[username]:
             #パスワードが違う
