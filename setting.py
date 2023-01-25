@@ -26,4 +26,5 @@ SOFTWARE.
 HOST = '127.0.0.1'
 PORT = 4081
 buf_size = 1024
-k = '\n'
+add_new_user = True#新しいusernameのプレーヤを自動で追加するかどうか
+k = '\n'#改行
