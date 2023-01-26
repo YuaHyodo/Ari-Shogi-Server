@@ -42,6 +42,7 @@ class game:
         self.ID = 'game-' + player1.name + '-VS-' +player2.name + '-' + str(time.time()).replace('.', '')#ゲームID
         self.file_name = './games/' + self.ID + '.csa'#保存先ファイル名
         self.file_text = ''#ファイルに書き込む文章
+        self.started = False
 
     def write(self):#ファイルに書き込む
         with open(self.file_name, 'w') as f:
@@ -68,6 +69,9 @@ class game:
                 break
             if 'REJECT' in m:
                 break
+            
+        self.started = True
+
         #両方agreeしたか？
         if agree[0] and agree[1]:
             #したのでスタート
