@@ -112,8 +112,9 @@ class Server_v1:
             #対局を開始する
             threads_list = []
             for g in self.games:
-                thread = Thread(target=g.start)
-                threads_list.append(thread)
+                if g.started == False:
+                    thread = Thread(target=g.start)
+                    threads_list.append(thread)
             for t in range(len(threads_list)):
                 threads_list[t].start()
                 self.log.write('start game ' + self.games[t].ID)
